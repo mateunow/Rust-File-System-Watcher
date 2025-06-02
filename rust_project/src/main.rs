@@ -1,16 +1,16 @@
 use std::env;
 use std::path::Path;
-use notify::{RecursiveMode,Result, Watcher};
+use notify::{event::{AccessKind, RenameMode}, RecursiveMode, Result, Watcher};
+
+// fn main() 
 fn main() -> Result<()>
 {
+    // let path = Path::new("./foo/bar/bar.txt");
+
+    // let parent = path.parent();
+    // print!("{:?}", parent);
+    // assert_eq!(parent, Some(Path::new("./bar")));
     let args: Vec<String> = env::args().collect();
-    // let first = &args[1];
-    // let second = &args[2];
-    // // dbg!(args);
-    //
-    //
-    // println!("First argument: {}", first);
-    // println!("Second argument: {}", second);
     let path = Path::new(&args[1]);
     println!("Start: {:?}", path);
     start_watching(path)?;
@@ -31,7 +31,28 @@ fn handle_event(result: notify::Result<notify::Event>)
     //Result<T, E> - 'hej mam coś, ale może to być ok(), albo err()
     //println!("Got event: {:?}", result);
     match result {
-        Ok(event) => println!("Got event: {:?}", event),
+        Ok(event) => {
+            println!("Got event: {:?}", event);
+            // let parent = event.paths.to;
+            // print!("Parent path: {:?}", parent);
+            match event.kind {
+                notify::EventKind::Access(AccessKind::Close(_)) => {
+                    
+                    println!("File closed in path: {:?}", event.paths);
+                }
+                notify::EventKind::Create(_) => {
+                    println!("File created in path: {:?}", event.paths);
+                }
+                notify::EventKind::Modify(_) => {
+                    println!("File modified in path: {:?}", event.paths);
+                }
+                notify::EventKind::Remove(_) => {
+                    println!("File removed in path: {:?}", event.paths);
+                }
+                _ => {}
+            }
+        }
         Err(e) => println!("Got error: {:?}", e),
-    }
+
+}
 }
