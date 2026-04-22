@@ -89,6 +89,7 @@ File removed in path: "./test_directory/file.txt"
 ```
 ## Project Structure
 src/
+
  └── main.rs      # Entry point, watcher initialization, event handling
  
 ## Key Concepts Demonstrated
